@@ -25,6 +25,14 @@ export const menuLinks: HeaderMenuLink[] = [
     icon: <ShoppingBagIcon className="h-4 w-4" />,
   },
   {
+    label: "MCP Demo",
+    href: "/mcp-test",
+  },
+  {
+    label: "MCP Endpoint",
+    href: "/api/mcp",
+  },
+  {
     label: "Upload",
     href: "/files/upload",
     icon: <ArrowUpTrayIcon className="h-4 w-4" />,

@@ -12,10 +12,9 @@
  *   [X402_NETWORK=hedera:testnet] [OUTPUT=./downloaded.bin] \
  *   yarn x402:buy
  */
-import { PrivateKey } from "@hiero-ledger/sdk";
 import { x402Client, x402HTTPClient } from "@x402/core/client";
 import type { Network } from "@x402/core/types";
-import { createClientHederaSigner } from "@x402/hedera";
+import { PrivateKey, createClientHederaSigner } from "@x402/hedera";
 import { ExactHederaScheme } from "@x402/hedera/exact/client";
 import { writeFile } from "node:fs/promises";
 
@@ -64,12 +63,12 @@ async function main() {
     const paid = await fetch(resourceUrl, { headers });
     const result = await httpClient.processResponse(paid);
 
-    if (result.kind !== "success") {
-      throw new Error(`Payment failed: ${result.kind}`);
+    if (result.paymentStatus !== "settled" || !result.header || !("success" in result.header)) {
+      throw new Error(`Payment failed: ${result.paymentStatus}`);
     }
     const body = result.body as { url?: string };
     if (!body.url) throw new Error("Payment succeeded but no download URL was returned");
-    console.log(`[x402-buy] Settled · tx ${result.settleResponse.transaction}`);
+    console.log(`[x402-buy] Settled · tx ${result.header.transaction}`);
     downloadUrl = body.url;
   } else {
     const body = await first.text();

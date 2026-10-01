@@ -22,6 +22,7 @@ import {
   createHederaClient,
   createHederaPreflightTransfer,
   createHederaSignAndSubmitTransaction,
+  createHederaVerifyPayerSignature,
   toFacilitatorHederaSigner,
 } from "@x402/hedera";
 import { ExactHederaScheme } from "@x402/hedera/exact/facilitator";
@@ -55,7 +56,8 @@ function buildClient(network: string) {
 const signer = toFacilitatorHederaSigner({
   getAddresses: () => [FEE_PAYER_ID],
   signAndSubmitTransaction: createHederaSignAndSubmitTransaction(buildClient, FEE_PAYER_KEY),
-  preflightTransfer: createHederaPreflightTransfer(buildClient),
+  verifyPayerSignature: createHederaVerifyPayerSignature(),
+  preflightTransfer: createHederaPreflightTransfer(),
 });
 
 // `aliasPolicy: "reject"` mirrors the reference default: payTo must be a concrete
@@ -67,6 +69,11 @@ function sendJson(res: ServerResponse, status: number, body: unknown) {
   const payload = JSON.stringify(body);
   res.writeHead(status, { "Content-Type": "application/json", "Content-Length": Buffer.byteLength(payload) });
   res.end(payload);
+}
+
+function safeDiagnosticMessage(message: unknown): string | undefined {
+  if (typeof message !== "string" || message.trim() === "") return undefined;
+  return message.replace(/[\u0000-\u001f\u007f]/g, " ").slice(0, 500);
 }
 
 async function readJson(req: IncomingMessage): Promise<{ x402Version: number; paymentPayload: PaymentPayload; paymentRequirements: PaymentRequirements }> {
@@ -92,6 +99,24 @@ const server = createServer(async (req, res) => {
     if (method === "POST" && path === "/verify") {
       const { paymentPayload, paymentRequirements } = await readJson(req);
       const result = await facilitator.verify(paymentPayload, paymentRequirements);
+      if (
+        process.env.NODE_ENV !== "production" &&
+        !result.isValid &&
+        result.invalidReason === "invalid_exact_hedera_payload_signature_invalid"
+      ) {
+        const message = safeDiagnosticMessage(result.invalidMessage);
+        if (message) {
+          console.warn(
+            "[facilitator] local payer-signature verification diagnostic",
+            JSON.stringify({
+              payer: result.payer || undefined,
+              payTo: paymentRequirements.payTo,
+              network: paymentRequirements.network,
+              message,
+            }),
+          );
+        }
+      }
       return sendJson(res, 200, result);
     }
 

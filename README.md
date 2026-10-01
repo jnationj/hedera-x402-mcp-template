@@ -94,6 +94,41 @@ Step-by-step verification (curl, facilitator health checks, CLI buyer script) is
 
 One **HashPack** WalletConnect session (via Reown AppKit, **`hedera` namespace only**) covers both registry writes and x402 payments — no second wallet connection and no separate EVM (`eip155`) signing path.
 
+## Paid MCP Demo
+
+The template includes a built-in paid MCP demonstration that exposes a single tool, `get_service_info`, over a stateless Streamable HTTP transport at `/api/mcp`. The browser demo page is `/mcp-test` and uses the same x402 Hedera payment flow as the file marketplace, but for an MCP tool call rather than a file download.
+
+The server-side implementation lives in `packages/nextjs/services/mcp/server.ts`, and the HTTP endpoint is in `packages/nextjs/app/api/mcp/route.ts`. The tool is a template-owned demo and is not an external production service. The request flow is:
+
+`MCP client → paid MCP tool → HTTP 402 → HashPack signs HBAR → self-hosted facilitator verifies/settles → tool executes → result returned`
+
+The demo is intentionally fixed-price at **0.01 HBAR** (**1,000,000 tinybars**) on **Hedera testnet** using native **HBAR**. It is implemented with `@x402/mcp` and the Hedera exact scheme, routed through the self-hosted facilitator. This is the MCP equivalent of the marketplace payment flow and is distinct from the private file-download path.
+
+### MCP-specific environment variables
+
+The demo requires matching values in `packages/nextjs/.env`:
+
+- `X402_MCP_PAY_TO` — server-side recipient account for the paid MCP demo.
+- `NEXT_PUBLIC_X402_MCP_PAY_TO` — browser-side allowed recipient value used by the demo UI.
+- `X402_NETWORK` — server-side x402 network identifier.
+- `NEXT_PUBLIC_X402_NETWORK` — browser-side x402 network identifier and must match `X402_NETWORK`.
+
+These values must correspond to the intended Hedera testnet recipient. The resource server validates `X402_MCP_PAY_TO` and requires it to be a valid account id before the tool can be served.
+
+### First-run MCP flow
+
+For a first run:
+
+1. Configure the required MCP x402 env vars in `packages/nextjs/.env`.
+2. Start the local infrastructure and facilitator (`yarn infra:up`).
+3. Start the Next.js app (`yarn next:dev`).
+4. Open `/mcp-test` in the browser.
+5. Connect HashPack.
+6. Approve the explicit **0.01 HBAR** testnet payment when prompted.
+7. Let the self-hosted facilitator verify and settle the transfer before the `get_service_info` tool executes.
+
+The response is the template’s built-in demonstration result, not an external paid service. It is meant to verify the MCP x402 payment flow in a controlled local/testnet template environment.
+
 ## Why the facilitator needs a private key
 
 Hedera x402 payments are **native transfers**, not EVM contract calls. HashPack can sign the buyer’s side of that transfer, but it cannot pay Hedera network fees or broadcast the transaction on its own in this flow.
@@ -113,7 +148,7 @@ The Next.js app does **not** need this private key. It only calls `FACILITATOR_U
 | Location | Key variables |
 | --- | --- |
 | Root `.env` | `MINIO_ROOT_*`, `S3_BUCKET`, `FACILITATOR_ACCOUNT_ID`, `FACILITATOR_PRIVATE_KEY` (fee payer — see above), `X402_NETWORK` |
-| `packages/nextjs/.env` | `FACILITATOR_URL`, `X402_NETWORK`, `NEXT_PUBLIC_X402_NETWORK`, `S3_*`, `HEDERA_RPC_URL`, optional `FILE_REGISTRY_ADDRESS`, optional `FILE_REGISTRY_HEDERA_CONTRACT_ID` / `NEXT_PUBLIC_FILE_REGISTRY_HEDERA_CONTRACT_ID` |
+| `packages/nextjs/.env` | `FACILITATOR_URL`, `X402_NETWORK`, `NEXT_PUBLIC_X402_NETWORK`, `X402_MCP_PAY_TO`, `NEXT_PUBLIC_X402_MCP_PAY_TO`, `S3_*`, `HEDERA_RPC_URL`, optional `FILE_REGISTRY_ADDRESS`, optional `FILE_REGISTRY_HEDERA_CONTRACT_ID` / `NEXT_PUBLIC_FILE_REGISTRY_HEDERA_CONTRACT_ID` |
 | `facilitator/.env` | Same fee-payer credentials when running the facilitator outside Docker |
 
 Full tables: [`RUNBOOK.md` — Environment variables](RUNBOOK.md#environment-variables).
@@ -143,6 +178,10 @@ Verified contracts appear on [Hashscan (testnet)](https://hashscan.io/testnet).
 | `yarn hardhat:test` | Run `FileRegistry` contract tests |
 | `yarn x402:buy` | Node agent buyer script (see `RUNBOOK.md`) |
 | `yarn facilitator:check-types` | Type-check the facilitator service |
+
+## Security and local-development warnings
+
+> Warning: the Hardhat config includes a local-development fallback private key in `hardhat.config.ts`. This is a generic local-dev key only and must never be funded or reused on Hedera public networks. It is not a production or testnet-funded account and should be treated as local-development-only.
 
 ## Caveats
 

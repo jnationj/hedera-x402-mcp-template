@@ -238,6 +238,85 @@ Sanity checks:
 > `200` + `PAYMENT-RESPONSE` receipt and the presigned URL) is exercised end-to-end in
 > Iteration 4 with the HashPack browser client and the Node agent buyer script.
 
+## Paid MCP Demo Verification
+
+This template includes a template-owned paid MCP tool and demo page for Hedera x402 settlement. The implementation is intentionally small and deterministic:
+
+- Endpoint: `/api/mcp`
+- Demo page: `/mcp-test`
+- Tool: `get_service_info`
+- Price: **0.01 HBAR** (**1,000,000 tinybars**)
+- Network: **Hedera testnet**
+- Asset: native **HBAR** (`0.0.0`)
+
+### Setup
+
+Set the required env vars in `packages/nextjs/.env`:
+
+```dotenv
+X402_NETWORK=hedera:testnet
+NEXT_PUBLIC_X402_NETWORK=hedera:testnet
+X402_MCP_PAY_TO=0.0.xxxxx
+NEXT_PUBLIC_X402_MCP_PAY_TO=0.0.xxxxx
+FACILITATOR_URL=http://localhost:4020
+```
+
+- `X402_MCP_PAY_TO` is the server-side recipient for the paid MCP demo.
+- `NEXT_PUBLIC_X402_MCP_PAY_TO` must match the same account on the browser side for the allow-listed requirement.
+- `X402_NETWORK` and `NEXT_PUBLIC_X402_NETWORK` must both be `hedera:testnet`.
+- Use the same HashPack / WalletConnect setup as the marketplace; the demo requires a connected Hedera wallet and funded testnet HBAR.
+
+### Start
+
+Use the existing project commands:
+
+```bash
+yarn infra:up
+yarn next:dev
+```
+
+Then open:
+
+- `/mcp-test`
+- Connect HashPack in the wallet button area
+- Trigger the paid MCP tool from the page
+
+### Expected payment flow
+
+1. The browser MCP client requests the paid tool.
+2. The resource server at `/api/mcp` responds with HTTP `402` and payment requirements.
+3. The x402 client prepares a Hedera exact payment with the expected amount and pay-to account.
+4. HashPack presents the native HBAR signing approval.
+5. The self-hosted facilitator verifies the signed payment.
+6. The facilitator settles the HBAR transfer on Hedera testnet.
+7. The `get_service_info` tool executes only after successful settlement.
+8. The tool result is returned to the client.
+
+### Verification checklist
+
+- HTTP `402` / payment negotiation occurs.
+- HashPack approval appears for the explicit **0.01 HBAR** payment.
+- The payment uses the expected amount (`1,000,000 tinybars`) and the configured pay-to account.
+- The network is `hedera:testnet`.
+- The facilitator accepts verification and settlement.
+- Settlement succeeds before the tool result is returned.
+- The result matches the template-owned demo tool, not an external production service.
+
+### Troubleshooting
+
+- **Missing / invalid `X402_MCP_PAY_TO`** — the server-side resource server requires a valid account id; the MCP service will not accept an empty or malformed value.
+- **Server-side vs browser-side pay-to mismatch** — `X402_MCP_PAY_TO` and `NEXT_PUBLIC_X402_MCP_PAY_TO` must match exactly.
+- **Incorrect x402 network** — ensure `X402_NETWORK` and `NEXT_PUBLIC_X402_NETWORK` both equal `hedera:testnet`.
+- **Facilitator unavailable** — if `FACILITATOR_URL` is unreachable or the facilitator is not running, the MCP route will fail before settlement.
+- **HashPack not connected** — the browser demo requires a connected Hedera wallet session.
+- **Insufficient testnet HBAR** — the buyer needs enough native HBAR to cover the 0.01 HBAR payment and network fees.
+
+### Security
+
+- Keep the facilitator private key server-side only.
+- Never commit real `.env` files or private keys.
+- The Hardhat fallback key is local-development-only and must never be funded or reused on public Hedera networks.
+
 ## Iteration 4 — Client + UI
 
 End-to-end upload, marketplace listing, and pay-per-download on testnet via HashPack (WalletConnect) or the Node agent script.
@@ -300,6 +379,8 @@ running the stack.
 | `FACILITATOR_URL` | x402 facilitator base URL (default `http://localhost:4020`) |
 | `X402_NETWORK` | Server-side x402 network id |
 | `NEXT_PUBLIC_X402_NETWORK` | Browser x402 client network (must match `X402_NETWORK`) |
+| `X402_MCP_PAY_TO` | Server-side recipient account for the paid MCP demo |
+| `NEXT_PUBLIC_X402_MCP_PAY_TO` | Browser-side allowed recipient value for the paid MCP demo (must match `X402_MCP_PAY_TO`) |
 | `S3_ENDPOINT` | MinIO API URL (default `http://localhost:9000`) |
 | `S3_REGION` | S3 region label (any value for MinIO) |
 | `S3_BUCKET` | Bucket name (must match root `.env`) |

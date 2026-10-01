@@ -49,6 +49,7 @@ export function createHederaProviderSigner(
       }
 
       tx.setTransactionId(TransactionId.generate(AccountId.fromString(feePayer)));
+      tx.setNodeAccountIds([AccountId.fromString("0.0.7")]);
 
       // Use HederaProvider helper so the SDK Transaction is serialized to the
       // base64 transactionBody HashPack expects (not a raw SDK object over WC).

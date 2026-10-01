@@ -1,0 +1,62 @@
+{
+  "name": "hedera-x402-mcp-template",
+  "description": "A Hedera testnet template demonstrating an x402-paid MCP tool using HashPack, native HBAR, and a self-hosted Hedera facilitator.",
+  "create-scaffold-hbar": {
+    "capabilities": {
+      "frontend": ["nextjs-app"],
+      "solidityFramework": ["hardhat"],
+      "packageManager": ["yarn", "npm"]
+    },
+    "defaults": {
+      "frontend": "nextjs-app",
+      "solidityFramework": "hardhat",
+      "packageManager": "yarn"
+    },
+    "outro": {
+      "sections": [
+        {
+          "steps": [
+            {
+              "text": "Hedera testnet demo: a fixed-price x402-protected MCP tool, HashPack HBAR payment, self-hosted facilitator, plus the FileRegistry/private-file marketplace."
+            }
+          ]
+        },
+        {
+          "title": "Next steps",
+          "steps": [
+            {
+              "label": "Copy environment examples",
+              "text": "Copy .env.example to .env and packages/nextjs/.env.example to packages/nextjs/.env."
+            },
+            {
+              "label": "Configure testnet accounts and app settings",
+              "text": "Set the funded ECDSA facilitator account/key in root .env. Set the WalletConnect project ID and matching X402_MCP_PAY_TO / NEXT_PUBLIC_X402_MCP_PAY_TO values in packages/nextjs/.env. Use Hedera testnet and fund the facilitator and buyer accounts."
+            },
+            {
+              "label": "Get testnet HBAR",
+              "url": "https://portal.hedera.com/faucet"
+            },
+            {
+              "label": "Start local infrastructure",
+              "command": "{run:infra:up}"
+            },
+            {
+              "label": "Deploy FileRegistry",
+              "command": "{run:hardhat:account:generate}"
+            },
+            {
+              "text": "Fund the generated deployer account, then run `yarn hardhat:deploy --network hederaTestnet` to deploy FileRegistry."
+            },
+            {
+              "label": "Start the app",
+              "command": "{run:next:dev}"
+            },
+            {
+              "text": "Open /mcp-test, connect HashPack, and follow the page's explicit approval prompt for the fixed 0.01 HBAR testnet MCP demo. See README.md and RUNBOOK.md for the file marketplace and verification details."
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
