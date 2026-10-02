@@ -5,7 +5,7 @@ import Link from "next/link";
 import { HederaPortalFaucet } from "@scaffold-hbar-ui/components";
 import type { NextPage } from "next";
 import { useAccount } from "wagmi";
-import { ArrowUpTrayIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
+import { ArrowUpTrayIcon, CircleStackIcon, ShoppingBagIcon } from "@heroicons/react/24/outline";
 import { HederaAddress } from "~~/components/scaffold-hbar";
 import { useTargetNetwork } from "~~/hooks/scaffold-hbar";
 
@@ -79,14 +79,14 @@ const Home: NextPage = () => {
         </div>
 
         <div className="w-full max-w-4xl mx-auto px-5 mt-8 pb-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="bg-base-100 rounded-2xl shadow-md p-8 text-center flex flex-col items-center hover:shadow-lg transition-shadow border border-base-300">
               <div className="w-14 h-14 rounded-full hedera-gradient flex items-center justify-center mb-4">
                 <ShoppingBagIcon className="h-7 w-7 text-white" />
               </div>
               <h3 className="font-bold text-lg mb-2">File Marketplace</h3>
               <p className="text-base-content/70 text-sm m-0 mb-6">
-                Browse public and private files. Private downloads are gated behind x402 HBAR payments.
+                Browse public and private files. Private downloads are protected by x402 HBAR payments.
               </p>
               <Link href="/files" passHref className="btn btn-primary btn-sm">
                 Open Marketplace
@@ -99,10 +99,23 @@ const Home: NextPage = () => {
               </div>
               <h3 className="font-bold text-lg mb-2">Upload a file</h3>
               <p className="text-base-content/70 text-sm m-0 mb-6">
-                Register files on-chain, set a price in HBAR, and store content in private MinIO storage.
+                Register files on Hedera, set a price in HBAR, and store private content in MinIO.
               </p>
               <Link href="/files/upload" passHref className="btn btn-primary btn-sm">
                 Upload
+              </Link>
+            </div>
+
+            <div className="bg-base-100 rounded-2xl shadow-md p-8 text-center flex flex-col items-center hover:shadow-lg transition-shadow border border-base-300">
+              <div className="w-14 h-14 rounded-full hedera-gradient flex items-center justify-center mb-4">
+                <CircleStackIcon className="h-7 w-7 text-white" />
+              </div>
+              <h3 className="font-bold text-lg mb-2">Paid MCP</h3>
+              <p className="text-base-content/70 text-sm m-0 mb-6">
+                Call a paid MCP tool and pay 0.01 HBAR through x402 before the tool executes.
+              </p>
+              <Link href="/mcp-test" passHref className="btn btn-primary btn-sm">
+                Open MCP
               </Link>
             </div>
           </div>
