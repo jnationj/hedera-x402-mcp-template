@@ -18,6 +18,16 @@ iteration lands. Run commands from the repository root unless stated otherwise.
 Get a testnet account and HBAR from the [Hedera Portal](https://portal.hedera.com/) faucet.
 Create the account as **ECDSA** (x402 on Hedera requires ECDSA keys).
 
+## Verified Hedera Testnet Transaction
+
+This template already contains a real successful Hedera testnet settlement for the paid MCP/x402 flow:
+
+- Transaction ID: `0.0.10780029@1790869050.695997997`
+- Mirror Node: https://testnet.mirrornode.hedera.com/api/v1/transactions/0.0.10780029-1790869050-695997997
+- HashScan: https://hashscan.io/testnet/transaction/0.0.10780029-1790869050-695997997
+
+This transaction demonstrates the HBAR settlement path used by the paid MCP demo and can be inspected independently on Hedera testnet. It is the existing verification record for the x402 payment workflow described in this template.
+
 ---
 
 ## Iteration 1 — Smart contract (`FileRegistry`)

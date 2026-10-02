@@ -94,6 +94,16 @@ Step-by-step verification (curl, facilitator health checks, CLI buyer script) is
 
 One **HashPack** WalletConnect session (via Reown AppKit, **`hedera` namespace only**) covers both registry writes and x402 payments — no second wallet connection and no separate EVM (`eip155`) signing path.
 
+## Verified Hedera Testnet Transaction
+
+This repository includes an existing successful Hedera testnet settlement for the paid MCP/x402 flow:
+
+- Transaction ID: `0.0.10780029@1790869050.695997997`
+- Mirror Node: https://testnet.mirrornode.hedera.com/api/v1/transactions/0.0.10780029-1790869050-695997997
+- HashScan: https://hashscan.io/testnet/transaction/0.0.10780029-1790869050-695997997
+
+This transaction demonstrates the successful HBAR settlement path used by the paid MCP demo and can be inspected independently on Hedera testnet. It is the existing verification record for the x402 payment workflow described in this template.
+
 ## Paid MCP Demo
 
 The template includes a built-in paid MCP demonstration that exposes a single tool, `get_service_info`, over a stateless Streamable HTTP transport at `/api/mcp`. The browser demo page is `/mcp-test` and uses the same x402 Hedera payment flow as the file marketplace, but for an MCP tool call rather than a file download.
