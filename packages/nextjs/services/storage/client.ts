@@ -1,6 +1,6 @@
 import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 /**
  * S3-compatible storage client for the x402 pay-per-use template.
@@ -112,4 +112,129 @@ export async function createDownloadUrl(params: {
     ResponseContentType: params.contentType || "application/octet-stream",
   });
   return getSignedUrl(s3, command, { expiresIn: DOWNLOAD_URL_TTL_SECONDS });
+}
+
+export type StorageIntegrityStatus = "verified" | "missing" | "unreadable" | "mismatch";
+
+export type StorageIntegrityVerification = {
+  verified: boolean;
+  status: StorageIntegrityStatus;
+  objectKey: string;
+  expectedHash: string;
+  actualHash?: string;
+  reason: string;
+};
+
+/**
+ * Normalise a registry hash into the canonical 32-byte hex format used by
+ * FileRegistry and its stored bytes32 commitment.
+ */
+export function normalizeContentHash(value: string): string {
+  const trimmed = value.trim();
+  const hex = trimmed.startsWith("0x") ? trimmed.slice(2) : trimmed;
+  const cleaned = hex.replace(/[^0-9a-fA-F]/g, "");
+  if (!cleaned) {
+    throw new Error("Content hash is empty or malformed.");
+  }
+  return `0x${cleaned.toLowerCase()}`;
+}
+
+/**
+ * Compare two SHA-256 hex digests without caring whether the input used a
+ * leading `0x` prefix or uppercase hex.
+ */
+export function compareContentHashes(expectedHash: string, actualHash: string): StorageIntegrityVerification {
+  const expected = normalizeContentHash(expectedHash);
+  const actual = normalizeContentHash(actualHash);
+
+  if (expected === actual) {
+    return {
+      verified: true,
+      status: "verified",
+      objectKey: "",
+      expectedHash: expected,
+      actualHash: actual,
+      reason: "The stored file matches the on-chain content commitment.",
+    };
+  }
+
+  return {
+    verified: false,
+    status: "mismatch",
+    objectKey: "",
+    expectedHash: expected,
+    actualHash: actual,
+    reason: "The stored file does not match the on-chain content commitment.",
+  };
+}
+
+function isMissingObjectError(error: unknown): boolean {
+  if (!error || typeof error !== "object") return false;
+  const maybeError = error as { name?: string; message?: string; $metadata?: { httpStatusCode?: number } };
+  const statusCode = maybeError.$metadata?.httpStatusCode ?? 0;
+  const message = `${maybeError.name ?? ""} ${maybeError.message ?? ""}`.toLowerCase();
+  return (
+    statusCode === 404 ||
+    message.includes("nosuchkey") ||
+    message.includes("not found") ||
+    message.includes("missing") ||
+    message.includes("no such key")
+  );
+}
+
+/**
+ * Download a stored object from MinIO/AIStor and compare its SHA-256 to the hash
+ * committed on-chain in FileRegistry.
+ */
+export async function verifyStoredObjectHash(
+  objectKey: string,
+  expectedHash: string,
+): Promise<StorageIntegrityVerification> {
+  const expected = normalizeContentHash(expectedHash);
+
+  try {
+    const response = await s3.send(
+      new GetObjectCommand({
+        Bucket: S3_BUCKET,
+        Key: objectKey,
+      }),
+    );
+
+    const body = response.Body as AsyncIterable<Uint8Array | Buffer | string> | null | undefined;
+    if (!body) {
+      return {
+        verified: false,
+        status: "unreadable",
+        objectKey,
+        expectedHash: expected,
+        reason: "The stored object body was empty or unreadable.",
+      };
+    }
+
+    const chunks: Buffer[] = [];
+    for await (const chunk of body) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+
+    const actualHash = `0x${createHash("sha256").update(Buffer.concat(chunks)).digest("hex")}`;
+    return compareContentHashes(expected, actualHash);
+  } catch (error) {
+    if (isMissingObjectError(error)) {
+      return {
+        verified: false,
+        status: "missing",
+        objectKey,
+        expectedHash: expected,
+        reason: "The object key is missing from MinIO/AIStor.",
+      };
+    }
+
+    return {
+      verified: false,
+      status: "unreadable",
+      objectKey,
+      expectedHash: expected,
+      reason: "The object could not be read from MinIO/AIStor.",
+    };
+  }
 }

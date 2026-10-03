@@ -48,6 +48,14 @@ const FileDetail: NextPage = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [downloading, setDownloading] = useState(false);
   const [receipt, setReceipt] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [verification, setVerification] = useState<{
+    verified: boolean;
+    status: string;
+    expectedHash: string;
+    actualHash?: string;
+    reason: string;
+  } | null>(null);
   const registryAddress = getFileRegistryAddress(targetNetwork.id);
   const registryHederaContractId = getFileRegistryHederaContractId(targetNetwork.id);
   const isOwner = !!ownerEvmAddress && !!file && ownerEvmAddress.toLowerCase() === file.owner.toLowerCase();
@@ -127,6 +135,44 @@ const FileDetail: NextPage = () => {
     }
   };
 
+  const handleVerify = async () => {
+    if (!id) return;
+    setVerifying(true);
+    try {
+      const res = await fetch(`/api/files/${id}/verify`);
+      const data = (await res.json()) as {
+        verified?: boolean;
+        status?: string;
+        expectedHash?: string;
+        actualHash?: string;
+        reason?: string;
+        error?: string;
+      };
+
+      if (!res.ok && !data.verified && data.status !== "mismatch") {
+        throw new Error(data.error ?? "Verification failed");
+      }
+
+      const expectedHash = file?.contentHash ?? "";
+      setVerification({
+        verified: Boolean(data.verified),
+        status: data.status ?? "unknown",
+        expectedHash: data.expectedHash ?? expectedHash,
+        actualHash: data.actualHash,
+        reason: data.reason ?? "Verification result received.",
+      });
+    } catch (e) {
+      setVerification({
+        verified: false,
+        status: "unreadable",
+        expectedHash: file?.contentHash ?? "",
+        reason: getParsedError(e),
+      });
+    } finally {
+      setVerifying(false);
+    }
+  };
+
   if (statusLoad === "loading") {
     return (
       <div className="w-full max-w-3xl mx-auto px-5 py-10">
@@ -180,6 +226,26 @@ const FileDetail: NextPage = () => {
           </FileDetailField>
           {!file.isPublic && <FileDetailField label="Pays to" value={file.payToAccountId} mono />}
           <FileDetailField label="SHA-256" value={file.contentHash} mono boxed />
+
+          <div className="flex flex-col gap-3">
+            <button className="btn btn-outline btn-sm w-fit" disabled={verifying} onClick={handleVerify}>
+              {verifying ? <span className="loading loading-spinner loading-sm" /> : null}
+              Verify file integrity
+            </button>
+
+            {verification && (
+              <div className={`alert ${verification.verified ? "alert-success" : "alert-error"}`}>
+                <span>{verification.verified ? "✓ File integrity verified" : "✗ File integrity check failed"}</span>
+                <p className="m-0">
+                  {verification.verified
+                    ? "The SHA-256 of the stored file matches the contentHash recorded on Hedera."
+                    : verification.reason || "The stored file does not match the on-chain content commitment."}
+                </p>
+                {verification.expectedHash && <p className="m-0 break-all">Expected: {verification.expectedHash}</p>}
+                {verification.actualHash && <p className="m-0 break-all">Actual: {verification.actualHash}</p>}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="border-t border-base-200 pt-5">

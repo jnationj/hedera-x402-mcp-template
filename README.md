@@ -83,6 +83,29 @@ yarn next:dev        # http://localhost:3000
 
 7. Connect **HashPack** in the header, upload a file, set a price, then pay for a private download from the file detail page.
 
+### Local AIStor / MinIO setup
+
+The project uses **MinIO AIStor** for its private S3-compatible object storage layer. The Docker stack currently uses:
+
+- `quay.io/minio/aistor/minio:latest`
+- `quay.io/minio/aistor/mc:latest`
+
+A local AIStor license file named `minio.license` must exist at the repository root before `docker compose` / `yarn infra:up` can start the object store correctly. The file is local-only, intentionally ignored by Git, and must never be committed or shared.
+
+AIStor exposes:
+
+- `http://localhost:9000` — S3/API
+- `http://localhost:9001` — console
+
+Normal startup / shutdown:
+
+```bash
+yarn infra:up
+yarn infra:down
+```
+
+Make sure Docker Desktop is running before starting the infrastructure.
+
 Step-by-step verification (curl, facilitator health checks, CLI buyer script) is in [`RUNBOOK.md`](RUNBOOK.md).
 
 ## How it works
@@ -91,6 +114,8 @@ Step-by-step verification (curl, facilitator health checks, CLI buyer script) is
 2. **List / browse** — the marketplace calls on-chain `getFileCount()` + `getFiles(offset, limit)` (view reads via JSON-RPC). It does **not** scan `FileRegistered` logs — Hedera JSON-RPC limits `eth_getLogs` to a 7-day window.
 3. **Download (public)** — `GET /api/files/:id/download` returns a presigned GET URL with no payment.
 4. **Download (private)** — the same route returns `402 Payment Required`; the x402 client builds a native Hedera `TransferTransaction`, your connected **HashPack** session **partially signs** it (authorizing the HBAR debit), the facilitator **co-signs as fee payer**, submits the transaction to Hedera, and the server responds with a presigned URL plus a `PAYMENT-RESPONSE` receipt.
+
+5. **Content integrity verification** — each file registers a SHA-256 `contentHash` commitment in `FileRegistry`, while the actual bytes remain in private MinIO/AIStor. The dedicated `GET /api/files/:id/verify` route reads the stored object, computes its SHA-256, and compares it to the on-chain commitment. A verified match shows the off-chain object still matches the content hash registered on Hedera; a mismatch indicates the object was altered or replaced without updating the registry entry.
 
 One **HashPack** WalletConnect session (via Reown AppKit, **`hedera` namespace only**) covers both registry writes and x402 payments — no second wallet connection and no separate EVM (`eip155`) signing path.
 

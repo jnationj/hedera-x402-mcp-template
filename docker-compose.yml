@@ -8,8 +8,8 @@
 
 services:
   minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
+    image: quay.io/minio/aistor/minio:latest
+    command: minio server /data --console-address ":9001" --license /minio.license
     ports:
       - "9000:9000" # S3 API
       - "9001:9001" # Web console
@@ -18,10 +18,11 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
     volumes:
       - minio-data:/data
+      - ./minio.license:/minio.license:ro
     restart: unless-stopped
 
   minio-init:
-    image: minio/mc:latest
+    image: quay.io/minio/aistor/mc:latest
     depends_on:
       - minio
     entrypoint: >

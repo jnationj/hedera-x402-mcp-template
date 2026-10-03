@@ -20,6 +20,9 @@ node_modules
 .env.local
 .env.*.local
 
+# AIStor local license (must exist at repo root and is never committed)
+minio.license
+
 # IDE
 .vscode
 .idea

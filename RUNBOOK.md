@@ -78,7 +78,30 @@ Expected:
 Two pieces run locally via Docker: a private **MinIO** bucket (object storage, no AWS) and the
 **self-hosted x402 Hedera facilitator** (verify/settle, no third-party service).
 
-### 2.1 Configure
+### 2.1 AIStor / MinIO local object storage
+
+The project uses **MinIO AIStor** for private S3-compatible local object storage. The current Docker images are:
+
+- `quay.io/minio/aistor/minio:latest`
+- `quay.io/minio/aistor/mc:latest`
+
+Before starting the stack, create a local AIStor license file named `minio.license` at the repository root. The file is required for the compose stack to boot correctly, is local-only, is intentionally ignored by Git, and must never be committed.
+
+AIStor exposes:
+
+- `http://localhost:9000` — S3/API
+- `http://localhost:9001` — console
+
+Normal startup / shutdown:
+
+```bash
+yarn infra:up
+yarn infra:down
+```
+
+Make sure Docker Desktop is running before starting the infrastructure.
+
+### 2.2 Configure
 
 ```bash
 cp .env.example .env

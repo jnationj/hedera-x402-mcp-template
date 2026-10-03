@@ -11,6 +11,7 @@ import type { ClientHederaSigner } from "@x402/hedera";
 
 /** CAIP-2 network the client signs for; must match the resource server. */
 export const X402_CLIENT_NETWORK = process.env.NEXT_PUBLIC_X402_NETWORK ?? "hedera:testnet";
+const HBAR_ASSET = "0.0.0";
 
 /** Outcome of a paid download attempt. */
 export type PaidDownload = {
@@ -22,7 +23,9 @@ export type PaidDownload = {
 async function buildHttpClient(signer: ClientHederaSigner) {
   const [clientScheme, core] = await Promise.all([import("@x402/hedera/exact/client"), import("@x402/core/client")]);
   const scheme = new clientScheme.ExactHederaScheme(signer);
-  const x402Client = new core.x402Client().register(X402_CLIENT_NETWORK as never, scheme);
+  const x402Client = new core.x402Client().register(X402_CLIENT_NETWORK as never, scheme).setSpendControls({
+    allowedAssets: [{ network: X402_CLIENT_NETWORK as "hedera:testnet", asset: HBAR_ASSET }],
+  });
   return new core.x402HTTPClient(x402Client);
 }
 
