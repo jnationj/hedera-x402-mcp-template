@@ -7,8 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-hbar/contract";
 const deployedContracts = {
   296: {
     FileRegistry: {
-      address: "0x4c5e0F1Fd7b13D1632f876944C9f7861Bdd177Bd",
-      hederaContractId: "0.0.9214560",
+      address: "0xEbdCf8DaE6E7962c38EBfE3c75BC75aA7F562357",
       abi: [
         {
           inputs: [
@@ -536,136 +535,41 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {},
-      deployedOnBlock: 36606458,
+      deployedOnBlock: 41351849,
+      hederaContractId: "0.0.10858803",
     },
-    SubscriptionMarketplace: {
-      address: "0xE9fBBaB46FCaf69fF565430F2e1B1e4b1abf1BDa",
+    Policy402: {
+      address: "0xF28dD385aB3288f6c11423994968317dA4Be09B8",
       abi: [
         {
           inputs: [
             {
               internalType: "address",
-              name: "initialOwner",
+              name: "fileRegistryAddress",
               type: "address",
-            },
-            {
-              internalType: "address",
-              name: "subscriptionNFTAddress",
-              type: "address",
-            },
-            {
-              internalType: "uint16",
-              name: "initialMarketplaceFeeBps",
-              type: "uint16",
             },
           ],
           stateMutability: "nonpayable",
           type: "constructor",
         },
         {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-          ],
-          name: "AvailabilityInactive",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-          ],
-          name: "AvailabilityNotFound",
+          inputs: [],
+          name: "InvalidFileId",
           type: "error",
         },
         {
           inputs: [],
-          name: "AvailabilityOutOfSubscriptionBounds",
+          name: "InvalidFileRegistry",
           type: "error",
         },
         {
           inputs: [],
-          name: "BookingAlreadyStarted",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-          ],
-          name: "BookingInactive",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-          ],
-          name: "BookingNotFound",
+          name: "InvalidPayTo",
           type: "error",
         },
         {
           inputs: [],
-          name: "BookingOutOfAvailabilityBounds",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "DateNotDayAligned",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "FeeTransferFailed",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "expected",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "received",
-              type: "uint256",
-            },
-          ],
-          name: "IncorrectPayment",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "InvalidDateRange",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "feeBps",
-              type: "uint256",
-            },
-          ],
-          name: "InvalidFeeBps",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "InvalidNumberOfDays",
+          name: "InvalidPaymentAsset",
           type: "error",
         },
         {
@@ -675,96 +579,37 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "InvalidSubscriptionNFTAddress",
+          name: "InvalidServiceId",
           type: "error",
         },
         {
           inputs: [],
-          name: "NotBookingRenter",
+          name: "InvalidValidityWindow",
           type: "error",
         },
         {
           inputs: [],
-          name: "NothingToWithdraw",
+          name: "NotOwner",
           type: "error",
         },
         {
           inputs: [],
-          name: "OverlappingAvailability",
+          name: "PolicyAlreadyExists",
           type: "error",
         },
         {
           inputs: [],
-          name: "OverlappingBooking",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-          ],
-          name: "OwnableInvalidOwner",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "OwnableUnauthorizedAccount",
+          name: "PolicyAlreadyRevoked",
           type: "error",
         },
         {
           inputs: [],
-          name: "OwnerPayoutFailed",
+          name: "PolicyNotFound",
           type: "error",
         },
         {
           inputs: [],
-          name: "PayoutAlreadyClaimed",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "PayoutNotAvailableYet",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "ProviderPayoutFailed",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "ReentrancyGuardReentrantCall",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "SubscriptionExpired",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "UnauthorizedSubscriptionOwner",
+          name: "PolicyVersionNotFound",
           type: "error",
         },
         {
@@ -772,18 +617,24 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
             {
               indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
             },
             {
               indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
               internalType: "address",
               name: "owner",
               type: "address",
@@ -791,23 +642,47 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
-              name: "windowStart",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validFrom",
               type: "uint256",
             },
             {
               indexed: false,
               internalType: "uint256",
-              name: "windowEnd",
+              name: "validUntil",
               type: "uint256",
             },
             {
               indexed: false,
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              indexed: false,
               internalType: "uint256",
-              name: "pricePerDay",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "AvailabilityCreated",
+          name: "PolicyCreated",
           type: "event",
         },
         {
@@ -815,124 +690,24 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
             },
             {
               indexed: false,
-              internalType: "uint256",
-              name: "oldPricePerDay",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "newPricePerDay",
-              type: "uint256",
-            },
-          ],
-          name: "AvailabilityPriceUpdated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-          ],
-          name: "AvailabilityRemoved",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "renter",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "startDate",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "endDate",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "totalPaid",
-              type: "uint256",
-            },
-          ],
-          name: "Booked",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "renter",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "refundedAmount",
-              type: "uint256",
-            },
-          ],
-          name: "BookingCancelled",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
               internalType: "address",
               name: "owner",
               type: "address",
@@ -940,42 +715,17 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
-              name: "ownerPayout",
+              name: "version",
               type: "uint256",
             },
             {
               indexed: false,
-              internalType: "uint256",
-              name: "feeAmount",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "providerFeeAmount",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
             },
           ],
-          name: "BookingPayoutClaimed",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "oldFeeBps",
-              type: "uint16",
-            },
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "newFeeBps",
-              type: "uint16",
-            },
-          ],
-          name: "MarketplaceFeeUpdated",
+          name: "PolicyRevoked",
           type: "event",
         },
         {
@@ -983,105 +733,104 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
               internalType: "address",
-              name: "recipient",
+              name: "owner",
               type: "address",
             },
             {
               indexed: false,
               internalType: "uint256",
-              name: "amount",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "MarketplaceFeesWithdrawn",
+          name: "PolicyVersionCreated",
           type: "event",
         },
         {
-          anonymous: false,
           inputs: [
             {
-              indexed: true,
-              internalType: "address",
-              name: "previousOwner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
             },
           ],
-          name: "OwnershipTransferred",
-          type: "event",
-        },
-        {
-          inputs: [],
-          name: "BPS_DENOMINATOR",
+          name: "computeFileServiceId",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bytes32",
               name: "",
-              type: "uint256",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "DAY",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "PROVIDER_FEE_BPS",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "accruedMarketplaceFees",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
-          ],
-          name: "availabilities",
-          outputs: [
             {
-              internalType: "uint256",
-              name: "id",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
             },
             {
               internalType: "address",
@@ -1089,213 +838,211 @@ const deployedContracts = {
               type: "address",
             },
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
               internalType: "uint256",
-              name: "windowStart",
+              name: "version",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "windowEnd",
+              name: "validFrom",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "pricePerDay",
+              name: "validUntil",
               type: "uint256",
             },
             {
-              internalType: "enum SubscriptionMarketplace.AvailabilityStatus",
-              name: "status",
-              type: "uint8",
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
             },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
             {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
+              internalType: "string",
+              name: "payTo",
+              type: "string",
             },
             {
               internalType: "uint256",
-              name: "startDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "numberOfDays",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "book",
+          name: "computePolicyHash",
           outputs: [
             {
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
             },
           ],
-          stateMutability: "payable",
+          stateMutability: "pure",
           type: "function",
         },
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
             },
           ],
-          name: "bookingsById",
+          name: "computePolicyId",
           outputs: [
             {
-              internalType: "uint256",
-              name: "id",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "renter",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              internalType: "uint256",
-              name: "startDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "endDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "totalPaid",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "feeAmount",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "providerFeeAmount",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "ownerPayout",
-              type: "uint256",
-            },
-            {
-              internalType: "bool",
-              name: "payoutClaimed",
-              type: "bool",
-            },
-            {
-              internalType: "enum SubscriptionMarketplace.BookingStatus",
-              name: "status",
-              type: "uint8",
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
           inputs: [
             {
+              internalType: "string",
+              name: "descriptor",
+              type: "string",
+            },
+          ],
+          name: "computeServiceId",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
               internalType: "uint256",
-              name: "bookingId",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "cancelBooking",
+          name: "createPolicy",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "createVersion",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "bookingId",
-              type: "uint256",
-            },
-          ],
-          name: "claimBookingPayout",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              internalType: "uint256",
-              name: "windowStart",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "windowEnd",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "pricePerDay",
-              type: "uint256",
-            },
-          ],
-          name: "createAvailability",
+          inputs: [],
+          name: "fileRegistry",
           outputs: [
             {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
+              internalType: "contract IFileRegistry",
+              name: "",
+              type: "address",
             },
           ],
-          stateMutability: "nonpayable",
+          stateMutability: "view",
           type: "function",
         },
         {
           inputs: [
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
             },
           ],
-          name: "getAvailability",
+          name: "getCurrentPolicy",
           outputs: [
             {
               components: [
                 {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "fileId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
                 },
                 {
                   internalType: "address",
@@ -1303,728 +1050,12 @@ const deployedContracts = {
                   type: "address",
                 },
                 {
-                  internalType: "int64",
-                  name: "serialNumber",
-                  type: "int64",
-                },
-                {
                   internalType: "uint256",
-                  name: "windowStart",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "windowEnd",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "pricePerDay",
-                  type: "uint256",
-                },
-                {
-                  internalType: "enum SubscriptionMarketplace.AvailabilityStatus",
-                  name: "status",
-                  type: "uint8",
-                },
-              ],
-              internalType: "struct SubscriptionMarketplace.AvailabilityWindow[]",
-              name: "list",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "getBookings",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "renter",
-                  type: "address",
-                },
-                {
-                  internalType: "uint256",
-                  name: "availabilityId",
-                  type: "uint256",
-                },
-                {
-                  internalType: "int64",
-                  name: "serialNumber",
-                  type: "int64",
-                },
-                {
-                  internalType: "uint256",
-                  name: "startDate",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "endDate",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "totalPaid",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "feeAmount",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "providerFeeAmount",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "ownerPayout",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bool",
-                  name: "payoutClaimed",
-                  type: "bool",
-                },
-                {
-                  internalType: "enum SubscriptionMarketplace.BookingStatus",
-                  name: "status",
-                  type: "uint8",
-                },
-              ],
-              internalType: "struct SubscriptionMarketplace.Booking[]",
-              name: "list",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "hasActiveFutureBookings",
-          outputs: [
-            {
-              internalType: "bool",
-              name: "",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "marketplaceFeeBps",
-          outputs: [
-            {
-              internalType: "uint16",
-              name: "",
-              type: "uint16",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "nextAvailabilityId",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "nextBookingId",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "owner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-          ],
-          name: "removeAvailability",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "renounceOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint16",
-              name: "newFeeBps",
-              type: "uint16",
-            },
-          ],
-          name: "setMarketplaceFeeBps",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "subscriptionNFT",
-          outputs: [
-            {
-              internalType: "contract ISubscriptionNFT",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "transferOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "availabilityId",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "newPricePerDay",
-              type: "uint256",
-            },
-          ],
-          name: "updateAvailability",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "userOf",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address payable",
-              name: "recipient",
-              type: "address",
-            },
-          ],
-          name: "withdrawMarketplaceFees",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-      ],
-      inheritedFunctions: {
-        owner: "@openzeppelin/contracts/access/Ownable.sol",
-        renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-        transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-      },
-      deployedOnBlock: 37161576,
-    },
-    SubscriptionNFT: {
-      address: "0x47231D6eD37B1F4A5d972c31a4838fEe530B0ACe",
-      abi: [
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "initialOwner",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "htsAddress",
-              type: "address",
-            },
-          ],
-          stateMutability: "nonpayable",
-          type: "constructor",
-        },
-        {
-          inputs: [],
-          name: "CollectionAlreadyCreated",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "CollectionNotCreated",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "EmptyField",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "responseCode",
-              type: "int64",
-            },
-          ],
-          name: "HtsCreateFailed",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "responseCode",
-              type: "int64",
-            },
-          ],
-          name: "HtsMintFailed",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "responseCode",
-              type: "int64",
-            },
-          ],
-          name: "HtsTransferFailed",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "InvalidDateRange",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "InvalidProviderAddress",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "InvalidSerialNumber",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "MetadataTooLong",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-          ],
-          name: "OwnableInvalidOwner",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "OwnableUnauthorizedAccount",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "SubscriptionNotFound",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "count",
-              type: "uint256",
-            },
-          ],
-          name: "UnexpectedSerialCount",
-          type: "error",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "collectionAddress",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "name",
-              type: "string",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "symbol",
-              type: "string",
-            },
-          ],
-          name: "CollectionCreated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "previousOwner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "OwnershipTransferred",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "recipient",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "provider",
-              type: "string",
-            },
-            {
-              indexed: false,
-              internalType: "string",
-              name: "serviceTier",
-              type: "string",
-            },
-          ],
-          name: "SubscriptionMinted",
-          type: "event",
-        },
-        {
-          inputs: [],
-          name: "DEFAULT_HTS",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "HTS",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "METADATA_MAX_BYTES",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "SUCCESS",
-          outputs: [
-            {
-              internalType: "int64",
-              name: "",
-              type: "int64",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "SUPPLY_KEY",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "collectionAddress",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "string",
-              name: "name",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "symbol",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "memo",
-              type: "string",
-            },
-          ],
-          name: "createCollection",
-          outputs: [
-            {
-              internalType: "address",
-              name: "createdAddress",
-              type: "address",
-            },
-          ],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "currentOwner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "getEndDate",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "getProviderAddress",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "getSubscription",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "address",
-                  name: "minter",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "providerAddress",
-                  type: "address",
-                },
-                {
-                  internalType: "string",
-                  name: "provider",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "serviceTier",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "startDate",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "endDate",
+                  name: "currentVersion",
                   type: "uint256",
                 },
               ],
-              internalType: "struct SubscriptionNFT.SubscriptionData",
+              internalType: "struct Policy402.PolicyState",
               name: "",
               type: "tuple",
             },
@@ -2035,12 +1066,197 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
           ],
-          name: "isExpired",
+          name: "getPolicy",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "fileId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "currentVersion",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct Policy402.PolicyState",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+          ],
+          name: "getPolicyHash",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+          ],
+          name: "getPolicyVersion",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "fileId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "version",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "validFrom",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "validUntil",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "paymentAsset",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "payTo",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceTinybar",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum Policy402.PolicyStatus",
+                  name: "status",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "createdAt",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "policyHash",
+                  type: "bytes32",
+                },
+              ],
+              internalType: "struct Policy402.PolicyVersionState",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+          ],
+          name: "getPolicyVersionCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+          ],
+          name: "isPolicyValid",
           outputs: [
             {
               internalType: "bool",
@@ -2054,50 +1270,271 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "providerAddress",
-              type: "address",
-            },
-            {
-              internalType: "string",
-              name: "provider",
-              type: "string",
-            },
-            {
-              internalType: "string",
-              name: "serviceTier",
-              type: "string",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
             {
               internalType: "uint256",
-              name: "startDate",
+              name: "version",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "endDate",
+              name: "timestamp",
               type: "uint256",
             },
           ],
-          name: "mintSubscription",
+          name: "isPolicyValidAt",
           outputs: [
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bool",
+              name: "",
+              type: "bool",
             },
           ],
-          stateMutability: "nonpayable",
+          stateMutability: "view",
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+          ],
+          name: "revokePolicy",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {},
+      deployedOnBlock: 41362255,
+      hederaContractId: "0.0.10862565",
+    },
+  },
+  31337: {
+    FileRegistry: {
+      address: "0x0Ac85d55ebFc7f7b0cF4c13bb3BD6Eaf3909d62d",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "field",
+              type: "string",
+            },
+          ],
+          name: "EmptyValue",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+          ],
+          name: "FileAlreadyRegistered",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+          ],
+          name: "FileNotFound",
+          type: "error",
+        },
+        {
           inputs: [],
-          name: "owner",
-          outputs: [
+          name: "InvalidContentHash",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
             {
               internalType: "address",
-              name: "",
+              name: "caller",
               type: "address",
+            },
+          ],
+          name: "NotFileOwner",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "FileDelisted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "objectKey",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "payToAccountId",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "isPublic",
+              type: "bool",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "contentHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "mimeType",
+              type: "string",
+            },
+          ],
+          name: "FileRegistered",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "oldPayToAccountId",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "newPayToAccountId",
+              type: "string",
+            },
+          ],
+          name: "PayToChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "oldPriceTinybar",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "newPriceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "PriceChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "isPublic",
+              type: "bool",
+            },
+          ],
+          name: "VisibilityChanged",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "MAX_PAGE_SIZE",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
             },
           ],
           stateMutability: "view",
@@ -2105,7 +1542,50 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "renounceOwnership",
+          name: "PAYMENT_ASSET",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "objectKey",
+              type: "string",
+            },
+          ],
+          name: "computeFileId",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "pure",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+          ],
+          name: "delistFile",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -2113,180 +1593,276 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
             },
           ],
-          name: "transferOwnership",
+          name: "getFile",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "payToAccountId",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceTinybar",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPublic",
+                  type: "bool",
+                },
+                {
+                  internalType: "string",
+                  name: "objectKey",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "contentHash",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "mimeType",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "exists",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct FileRegistry.FileItem",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getFileCount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "offset",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "limit",
+              type: "uint256",
+            },
+          ],
+          name: "getFiles",
+          outputs: [
+            {
+              internalType: "bytes32[]",
+              name: "ids",
+              type: "bytes32[]",
+            },
+            {
+              components: [
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "string",
+                  name: "payToAccountId",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceTinybar",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPublic",
+                  type: "bool",
+                },
+                {
+                  internalType: "string",
+                  name: "objectKey",
+                  type: "string",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "contentHash",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "string",
+                  name: "name",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "mimeType",
+                  type: "string",
+                },
+                {
+                  internalType: "bool",
+                  name: "exists",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct FileRegistry.FileItem[]",
+              name: "files",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "string",
+              name: "objectKey",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payToAccountId",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isPublic",
+              type: "bool",
+            },
+            {
+              internalType: "bytes32",
+              name: "contentHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "name",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "mimeType",
+              type: "string",
+            },
+          ],
+          name: "registerFile",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              internalType: "string",
+              name: "newPayToAccountId",
+              type: "string",
+            },
+          ],
+          name: "setPayToAccountId",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "newPriceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "setPrice",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "fileId",
+              type: "bytes32",
+            },
+            {
+              internalType: "bool",
+              name: "isPublic",
+              type: "bool",
+            },
+          ],
+          name: "setVisibility",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
       ],
-      inheritedFunctions: {
-        owner: "@openzeppelin/contracts/access/Ownable.sol",
-        renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-        transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-      },
-      deployedOnBlock: 37161572,
+      inheritedFunctions: {},
+      deployedOnBlock: 41350056,
     },
-    SubscriptionSalesMarketplace: {
-      address: "0x350CDD4aE2CB46d6C4c3d220abF1322d7af287a5",
+    Policy402: {
+      address: "0x4B901e2Db7C412D966689E8D3CF479294C456f1e",
       abi: [
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "initialOwner",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "subscriptionNFTAddress",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "rentalMarketplaceAddress",
-              type: "address",
-            },
-            {
-              internalType: "uint16",
-              name: "initialMarketplaceFeeBps",
-              type: "uint16",
-            },
-          ],
-          stateMutability: "nonpayable",
-          type: "constructor",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "AlreadyListed",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "AuctionEnded",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "AuctionHasBids",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "AuctionNotEnded",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "required",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "provided",
-              type: "uint256",
-            },
-          ],
-          name: "BidTooLow",
+          inputs: [],
+          name: "InvalidPayTo",
           type: "error",
         },
         {
           inputs: [],
-          name: "CannotBidOnFixedPrice",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "CannotBuyAuction",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "HasActiveFutureBookings",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "expected",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "received",
-              type: "uint256",
-            },
-          ],
-          name: "IncorrectPayment",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "effectiveStartDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "minDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "maxDate",
-              type: "uint256",
-            },
-          ],
-          name: "InvalidEffectiveStartDate",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "feeBps",
-              type: "uint256",
-            },
-          ],
-          name: "InvalidFeeBps",
+          name: "InvalidPaymentAsset",
           type: "error",
         },
         {
@@ -2296,512 +1872,346 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "InvalidRentalMarketplaceAddress",
+          name: "InvalidServiceId",
           type: "error",
         },
         {
           inputs: [],
-          name: "InvalidSubscriptionNFTAddress",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "ListingNotActive",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "ListingNotFound",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "NotApprovedForTransfer",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "NotCurrentOwner",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "NotSeller",
+          name: "InvalidValidityWindow",
           type: "error",
         },
         {
           inputs: [],
-          name: "NothingToWithdraw",
+          name: "NotOwner",
           type: "error",
         },
         {
+          inputs: [],
+          name: "PolicyAlreadyExists",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "PolicyAlreadyRevoked",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "PolicyNotFound",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "PolicyVersionNotFound",
+          type: "error",
+        },
+        {
+          anonymous: false,
           inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "PolicyCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
+            },
+          ],
+          name: "PolicyRevoked",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "policyHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "PolicyVersionCreated",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
             {
               internalType: "address",
               name: "owner",
               type: "address",
             },
-          ],
-          name: "OwnableInvalidOwner",
-          type: "error",
-        },
-        {
-          inputs: [
             {
-              internalType: "address",
-              name: "account",
-              type: "address",
-            },
-          ],
-          name: "OwnableUnauthorizedAccount",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "ReentrancyGuardReentrantCall",
-          type: "error",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "SubscriptionExpired",
-          type: "error",
-        },
-        {
-          inputs: [],
-          name: "TransferFailed",
-          type: "error",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
               internalType: "uint256",
-              name: "listingId",
+              name: "version",
               type: "uint256",
             },
             {
-              indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "seller",
-              type: "address",
-            },
-            {
-              indexed: false,
               internalType: "uint256",
-              name: "reservePrice",
+              name: "validFrom",
               type: "uint256",
             },
             {
-              indexed: false,
               internalType: "uint256",
-              name: "effectiveStartDate",
+              name: "validUntil",
               type: "uint256",
             },
             {
-              indexed: false,
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
               internalType: "uint256",
-              name: "auctionEndTime",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "AuctionCreated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "bidder",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "previousBidder",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "previousBid",
-              type: "uint256",
-            },
-          ],
-          name: "BidPlaced",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "seller",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "price",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "effectiveStartDate",
-              type: "uint256",
-            },
-          ],
-          name: "FixedPriceListingCreated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "seller",
-              type: "address",
-            },
-          ],
-          name: "ListingCancelled",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "buyer",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "address",
-              name: "seller",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "salePrice",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "providerFee",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "marketplaceFee",
-              type: "uint256",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "sellerProceeds",
-              type: "uint256",
-            },
-          ],
-          name: "ListingSold",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "oldFeeBps",
-              type: "uint16",
-            },
-            {
-              indexed: false,
-              internalType: "uint16",
-              name: "newFeeBps",
-              type: "uint16",
-            },
-          ],
-          name: "MarketplaceFeeUpdated",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "recipient",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "amount",
-              type: "uint256",
-            },
-          ],
-          name: "MarketplaceFeesWithdrawn",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "previousOwner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "OwnershipTransferred",
-          type: "event",
-        },
-        {
-          inputs: [],
-          name: "AUCTION_DURATION",
+          name: "computePolicyHash",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bytes32",
               name: "",
-              type: "uint256",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
-          inputs: [],
-          name: "BPS_DENOMINATOR",
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+          ],
+          name: "computePolicyId",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bytes32",
               name: "",
-              type: "uint256",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
-          inputs: [],
-          name: "MIN_BID_INCREMENT_BPS",
+          inputs: [
+            {
+              internalType: "string",
+              name: "descriptor",
+              type: "string",
+            },
+          ],
+          name: "computeServiceId",
           outputs: [
             {
-              internalType: "uint256",
+              internalType: "bytes32",
               name: "",
-              type: "uint256",
+              type: "bytes32",
             },
           ],
-          stateMutability: "view",
+          stateMutability: "pure",
           type: "function",
         },
         {
-          inputs: [],
-          name: "PROVIDER_FEE_BPS",
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "validFrom",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "priceTinybar",
+              type: "uint256",
+            },
+          ],
+          name: "createPolicy",
           outputs: [
             {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "accruedMarketplaceFees",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-          ],
-          name: "activeListingBySerial",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "bid",
-          outputs: [],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "buy",
-          outputs: [],
-          stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
-          name: "cancelListing",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              internalType: "uint256",
-              name: "reservePrice",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "effectiveStartDate",
-              type: "uint256",
-            },
-          ],
-          name: "createAuction",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
           ],
           stateMutability: "nonpayable",
@@ -2810,96 +2220,75 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
             {
               internalType: "uint256",
-              name: "askPrice",
+              name: "validFrom",
               type: "uint256",
             },
             {
               internalType: "uint256",
-              name: "effectiveStartDate",
+              name: "validUntil",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "paymentAsset",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "payTo",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "priceTinybar",
               type: "uint256",
             },
           ],
-          name: "createFixedPriceListing",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
-            },
-          ],
+          name: "createVersion",
+          outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "listingId",
-              type: "uint256",
+              internalType: "bytes32",
+              name: "serviceId",
+              type: "bytes32",
             },
           ],
-          name: "getListing",
+          name: "getCurrentPolicy",
           outputs: [
             {
               components: [
                 {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
                 },
                 {
-                  internalType: "int64",
-                  name: "serialNumber",
-                  type: "int64",
-                },
-                {
-                  internalType: "address",
-                  name: "seller",
-                  type: "address",
-                },
-                {
-                  internalType: "enum SubscriptionSalesMarketplace.ListingType",
-                  name: "listingType",
-                  type: "uint8",
-                },
-                {
-                  internalType: "enum SubscriptionSalesMarketplace.ListingStatus",
-                  name: "status",
-                  type: "uint8",
-                },
-                {
-                  internalType: "uint256",
-                  name: "price",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "effectiveStartDate",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "auctionEndTime",
-                  type: "uint256",
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
                 },
                 {
                   internalType: "address",
-                  name: "highestBidder",
+                  name: "owner",
                   type: "address",
                 },
                 {
                   internalType: "uint256",
-                  name: "highestBid",
+                  name: "currentVersion",
                   type: "uint256",
                 },
               ],
-              internalType: "struct SubscriptionSalesMarketplace.Listing",
+              internalType: "struct Policy402.PolicyState",
               name: "",
               type: "tuple",
             },
@@ -2910,12 +2299,163 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+          ],
+          name: "getPolicy",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "currentVersion",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct Policy402.PolicyState",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
               internalType: "uint256",
-              name: "listingId",
+              name: "version",
               type: "uint256",
             },
           ],
-          name: "getMinimumBid",
+          name: "getPolicyHash",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
+            },
+          ],
+          name: "getPolicyVersion",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "bytes32",
+                  name: "policyId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "serviceId",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "address",
+                  name: "owner",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "version",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "validFrom",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "validUntil",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "paymentAsset",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "payTo",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceTinybar",
+                  type: "uint256",
+                },
+                {
+                  internalType: "enum Policy402.PolicyStatus",
+                  name: "status",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "createdAt",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "policyHash",
+                  type: "bytes32",
+                },
+              ],
+              internalType: "struct Policy402.PolicyVersionState",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+          ],
+          name: "getPolicyVersionCount",
           outputs: [
             {
               internalType: "uint256",
@@ -2929,12 +2469,17 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "version",
+              type: "uint256",
             },
           ],
-          name: "hasActiveListing",
+          name: "isPolicyValid",
           outputs: [
             {
               internalType: "bool",
@@ -2948,121 +2493,27 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
+            },
+            {
               internalType: "uint256",
-              name: "listingId",
+              name: "version",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "timestamp",
               type: "uint256",
             },
           ],
-          name: "listings",
+          name: "isPolicyValidAt",
           outputs: [
             {
-              internalType: "uint256",
-              name: "id",
-              type: "uint256",
-            },
-            {
-              internalType: "int64",
-              name: "serialNumber",
-              type: "int64",
-            },
-            {
-              internalType: "address",
-              name: "seller",
-              type: "address",
-            },
-            {
-              internalType: "enum SubscriptionSalesMarketplace.ListingType",
-              name: "listingType",
-              type: "uint8",
-            },
-            {
-              internalType: "enum SubscriptionSalesMarketplace.ListingStatus",
-              name: "status",
-              type: "uint8",
-            },
-            {
-              internalType: "uint256",
-              name: "price",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "effectiveStartDate",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "auctionEndTime",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "highestBidder",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "highestBid",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "marketplaceFeeBps",
-          outputs: [
-            {
-              internalType: "uint16",
+              internalType: "bool",
               name: "",
-              type: "uint16",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "nextListingId",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "owner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "renounceOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "rentalMarketplace",
-          outputs: [
-            {
-              internalType: "contract IRentalMarketplace",
-              name: "",
-              type: "address",
+              type: "bool",
             },
           ],
           stateMutability: "view",
@@ -3071,75 +2522,24 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "uint16",
-              name: "newFeeBps",
-              type: "uint16",
+              internalType: "bytes32",
+              name: "policyId",
+              type: "bytes32",
             },
-          ],
-          name: "setMarketplaceFeeBps",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
             {
               internalType: "uint256",
-              name: "listingId",
+              name: "version",
               type: "uint256",
             },
           ],
-          name: "settleAuction",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "subscriptionNFT",
-          outputs: [
-            {
-              internalType: "contract ISalesSubscriptionNFT",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "transferOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address payable",
-              name: "recipient",
-              type: "address",
-            },
-          ],
-          name: "withdrawMarketplaceFees",
+          name: "revokePolicy",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
         },
       ],
-      inheritedFunctions: {
-        owner: "@openzeppelin/contracts/access/Ownable.sol",
-        renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-        transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-      },
-      deployedOnBlock: 37161580,
+      inheritedFunctions: {},
+      deployedOnBlock: 41350058,
     },
   },
 } as const;

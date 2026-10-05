@@ -5,6 +5,7 @@ import {
   encodePaymentResponseHeader,
 } from "@x402/core/http";
 import type { PaymentRequirements, ResourceInfo } from "@x402/core/types";
+import { validateResourcePolicy } from "~~/services/policy/server";
 import { RegistryNotDeployedError, getRegistryFile, isFileId, toPublicFile } from "~~/services/registry/server";
 import { createDownloadUrl } from "~~/services/storage/client";
 import {
@@ -63,6 +64,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       contentType: file.mimeType,
     });
     return NextResponse.json({ url, file: toPublicFile(file) });
+  }
+
+  const resourceDescriptor = `api://files/${id}`;
+  const policyCheck = await validateResourcePolicy(resourceDescriptor, file);
+  if (!policyCheck.ok) {
+    return NextResponse.json({ error: "Policy attestation failed", reason: policyCheck.reason }, { status: 403 });
   }
 
   // Private files are gated behind a fresh x402 payment.

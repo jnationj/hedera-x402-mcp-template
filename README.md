@@ -1,248 +1,224 @@
 # x402 Pay-Per-Use Template (Hedera)
 
-Pay-per-download file marketplace on Hedera using [x402](https://x402.org/): private **MinIO** storage, self-hosted **x402 facilitator**, and on-chain **FileRegistry** metadata.
+This template combines Scaffold-HBAR, Solidity smart contracts, a private MinIO storage layer, an x402 pay-per-use resource server, a self-hosted Hedera facilitator, and a browser-based HashPack flow for file access and paid MCP tools.
 
-CLI key: `x402-pay-per-use` (branch `templates/x402-pay-per-use`).
+The project is designed for Hedera testnet use and is intended for local experimentation and developer validation. It is not an audited production deployment.
 
-```bash
-npx create-scaffold-hbar@latest --template x402-pay-per-use
-```
+## What this template provides
 
-General Scaffold-HBAR setup: [Scaffold HBAR on Hedera](https://docs.hedera.com/solutions/tools/scaffold-hbar/index). Step-by-step verification: [`RUNBOOK.md`](RUNBOOK.md).
+- Hedera Scaffold-HBAR app shell
+- `FileRegistry` smart contract for file metadata and access terms
+- `Policy402` V1 contract for versioned payment policies
+- private MinIO-backed file storage
+- x402-based protected download flow for private files
+- self-hosted facilitator for verifying and settling HBAR payments
+- paid MCP endpoint using Streamable HTTP and `@x402/mcp`
+- HashPack native Hedera wallet signing for both contract writes and payments
 
-## Disclaimer
+## Architecture
 
-This template—including **contracts, frontend, facilitator, and tooling**—is **experimental** and **not audited**. Use testnets and small amounts only.
+### Upload flow
 
-Sellers upload files to private **MinIO** storage and register them on-chain with `FileRegistry`. Buyers pay in **HBAR** via **HashPack**; a self-hosted **x402 Hedera facilitator** verifies and settles each payment on testnet before the resource server issues a short-lived download URL.
+Browser → MinIO presigned upload → `FileRegistry.registerFile` → file ID
 
-## Prerequisites
+### Policy flow
 
-- [Node.js](https://nodejs.org/) — see [Node.js version](#nodejs-version) below (default: **20 LTS** ≥ 20.18.3)
-- Yarn (default; required if you clone this repo) or npm if you scaffolded with the CLI. For Yarn, install via Corepack: `corepack enable && corepack prepare yarn@stable --activate`
-- [Git](https://git-scm.com/)
-- [Docker](https://docs.docker.com/get-docker/) + Docker Compose (MinIO and self-hosted facilitator)
-- A funded **ECDSA** Hedera testnet account for contract deploy and facilitator fee-payer duties
+Registered file → canonical service ID → `Policy402.createPolicy` → payment policy
 
-## Node.js version
+### Private download flow
 
-**Use Node 20 LTS (≥ 20.18.3) by default** for everything in this repo: `yarn install`, Hardhat (compile, test, deploy, verify), Docker infra, and the Next.js app. That matches what this template is tested against.
+Client → protected download API → Policy402 validation → x402 challenge → facilitator → HBAR settlement → signed MinIO URL
 
-**AWS SDK console notice:** When Next.js compiles the MinIO upload/download routes, you may see a `NodeVersionSupportWarning` on Node 20. The app still works — it is informational. Current `@aws-sdk/client-s3` releases run on Node 20; **future** SDK versions (from early 2027 onward) are expected to require Node 22+. You can ignore the warning for now.
+### MCP flow
 
-### Optional: Node 22 for the Next.js app only
+Client → `/api/mcp` → paid `get_service_info` tool → x402 challenge → HBAR settlement → tool response
 
-If you want cleaner dev logs or to stay ahead of AWS SDK’s Node 22 direction, run **Hardhat on Node 20** and **Next.js on Node 22**. Install both with [nvm](https://github.com/nvm-sh/nvm) or [fnm](https://github.com/Schniz/fnm):
+## Features
 
-1. Run `yarn install` once at the repo root (Node 20 or 22 is fine for install).
-2. **Node 20** — contract work: `yarn hardhat:test`, `yarn hardhat:deploy`, `yarn hardhat:verify:*`.
-3. **Node 22** — resource server: `yarn next:dev`, `yarn next:build`.
+- Public and private file registration
+- On-chain metadata and pricing in `FileRegistry`
+- `Policy402` V1 payment-policy attestation per registered file
+- Policy versioning and version-level revocation
+- Canonical service ID derived from the file resource descriptor
+- x402 private downloads with native HBAR settlement
+- paid MCP tool via Streamable HTTP
+- HashPack and native Hedera wallet signing
+- Hedera testnet deployment and verification
 
-Example with fnm:
+## Routes
 
-```bash
-fnm use 20 && yarn hardhat:test
-fnm use 22 && yarn next:dev
-```
+Core app routes and API routes in the current project:
 
-Hardhat is documented for Node 20; run deploy/tests on Node 22 yourself before switching the whole monorepo to a single version.
+- `/` — landing page
+- `/files/upload` — file upload workflow
+- `/files/[id]` — file detail and access logic
+- `/createpolicy` — create a Policy402 V1 policy for an existing file
+- `/revokepolicy` — revoke the current policy version for an existing file
+- `/mcp-test` — browser demo for the paid MCP flow
+- `/debug` — debug utilities and live contract info
+- `/debug/policy` — Policy402 debug and validation utilities
+
+API routes:
+
+- `/api/files/upload` — presigned MinIO PUT URL
+- `/api/files/[id]/download` — public/private download route with x402 gate
+- `/api/mcp` — Streamable HTTP MCP endpoint for the paid tool
+
+## Smart contracts
+
+### `FileRegistry`
+
+`FileRegistry` stores file metadata on Hedera and is the canonical source for file ownership, access terms, and object references. The file bytes remain in private MinIO storage; on-chain state stores the object key, content hash, owner, price, and visibility fields.
+
+### `Policy402`
+
+`Policy402` is the V1 policy contract used for resource-level payment policy attestation. It is explicitly scoped to the current V1 behavior:
+
+- one file → one current policy
+- policy created for an existing `FileRegistry` file
+- canonical service ID derived from the file resource descriptor
+- owner authorization required for creation and revocation
+- versioned policy lifecycle
+- version-level revocation
+- creating a new active version after revoking an old version is allowed
+- no V2 mutation/reactivation behavior is part of V1
+
+This matches the current contract logic in `packages/hardhat/contracts/Policy402.sol`.
+
+## Current verified testnet deployments
+
+The current deployment metadata in `packages/nextjs/contracts/deployedContracts.ts` contains these active contracts on Hedera testnet:
+
+- FileRegistry
+  - EVM: `0xEbdCf8DaE6E7962c38EBfE3c75BC75aA7F562357`
+  - Hedera: `0.0.10858803`
+- Policy402 V1
+  - EVM: `0xF28dD385aB3288f6c11423994968317dA4Be09B8`
+  - Hedera: `0.0.10862565`
+
+These are the current public deployment values this repo expects for the live testnet flow.
+
+## Policy workflow
+
+1. Upload and register a file.
+2. Open `/createpolicy`.
+3. Select or load the registered file by FileRegistry ID.
+4. Confirm the connected wallet owns the file.
+5. Set validity and payment details.
+6. Sign with HashPack.
+7. Wait for Hedera confirmation.
+8. Read back the created policy.
+9. Use the protected resource or download flow.
+10. Revoke from `/revokepolicy` when needed.
+
+## MCP workflow
+
+Use the browser demo at `/mcp-test`.
+
+Requirements:
+
+- connected HashPack wallet
+- valid Hedera testnet account
+- running local facilitator and app infrastructure
+
+The demo calls the paid `get_service_info` MCP tool over Streamable HTTP. The wallet approves the native HBAR transfer, the facilitator verifies and settles the payment, and the tool result is returned in the browser.
+
+Do not bypass the UI with custom raw HTTP examples in normal usage; the supported path is the browser demo page that uses the verified x402 flow.
+
+## Configuration
+
+This project uses a small set of actual environment values that are required for current local/testnet operation.
+
+### Root `.env`
+
+- `MINIO_ROOT_USER`
+- `MINIO_ROOT_PASSWORD`
+- `S3_BUCKET`
+- `FACILITATOR_PORT`
+- `X402_NETWORK`
+- `FACILITATOR_ACCOUNT_ID`
+- `FACILITATOR_PRIVATE_KEY`
+- `HEDERA_NODE_URL` (optional)
+
+### `packages/nextjs/.env`
+
+- `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID`
+- `FACILITATOR_URL`
+- `X402_NETWORK`
+- `NEXT_PUBLIC_X402_NETWORK`
+- `HEDERA_RPC_URL`
+- `S3_ENDPOINT`
+- `S3_BUCKET`
+- `S3_ACCESS_KEY`
+- `S3_SECRET_KEY`
+- `S3_FORCE_PATH_STYLE`
+- `X402_MCP_PAY_TO`
+- `NEXT_PUBLIC_X402_MCP_PAY_TO`
+
+Never commit or expose real wallet keys, facilitator secrets, mnemonics, or API tokens.
 
 ## Quick start
 
 1. Install dependencies:
 
 ```bash
+corepack enable
+corepack prepare yarn@3.2.3 --activate
 yarn install
 ```
 
 2. Copy environment files:
 
 ```bash
-cp .env.example .env
-cp packages/nextjs/.env.example packages/nextjs/.env
+Copy-Item .env.example .env
+Copy-Item packages\nextjs\.env.example packages\nextjs\.env
 ```
 
-3. Configure the facilitator fee-payer in root `.env` (see [Why the facilitator needs a private key](#why-the-facilitator-needs-a-private-key)):
-   `FACILITATOR_ACCOUNT_ID` and `FACILITATOR_PRIVATE_KEY`. Fund that account with testnet HBAR from the [Hedera Portal faucet](https://portal.hedera.com/faucet).
+3. Configure the local Docker environment and ensure `minio.license` exists at the repo root.
 
-4. Set `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` in `packages/nextjs/.env` (WalletConnect / HashPack).
-
-5. Deploy `FileRegistry` to Hedera testnet:
-
-```bash
-yarn hardhat:account:generate   # or: yarn hardhat:account:import
-yarn hardhat:deploy --network hederaTestnet
-```
-
-6. Start local infra and the app:
-
-```bash
-yarn infra:up        # MinIO :9000 / :9001, facilitator :4020
-yarn next:dev        # http://localhost:3000
-```
-
-7. Connect **HashPack** in the header, upload a file, set a price, then pay for a private download from the file detail page.
-
-### Local AIStor / MinIO setup
-
-The project uses **MinIO AIStor** for its private S3-compatible object storage layer. The Docker stack currently uses:
-
-- `quay.io/minio/aistor/minio:latest`
-- `quay.io/minio/aistor/mc:latest`
-
-A local AIStor license file named `minio.license` must exist at the repository root before `docker compose` / `yarn infra:up` can start the object store correctly. The file is local-only, intentionally ignored by Git, and must never be committed or shared.
-
-AIStor exposes:
-
-- `http://localhost:9000` — S3/API
-- `http://localhost:9001` — console
-
-Normal startup / shutdown:
-
-```bash
-yarn infra:up
-yarn infra:down
-```
-
-Make sure Docker Desktop is running before starting the infrastructure.
-
-Step-by-step verification (curl, facilitator health checks, CLI buyer script) is in [`RUNBOOK.md`](RUNBOOK.md).
-
-## How it works
-
-1. **Upload** — the browser gets a presigned MinIO PUT URL from `POST /api/files/upload`, PUTs the bytes to MinIO, then registers metadata on `FileRegistry` via a native Hedera `ContractExecuteTransaction` signed in HashPack (`hedera_signAndExecuteTransaction`).
-2. **List / browse** — the marketplace calls on-chain `getFileCount()` + `getFiles(offset, limit)` (view reads via JSON-RPC). It does **not** scan `FileRegistered` logs — Hedera JSON-RPC limits `eth_getLogs` to a 7-day window.
-3. **Download (public)** — `GET /api/files/:id/download` returns a presigned GET URL with no payment.
-4. **Download (private)** — the same route returns `402 Payment Required`; the x402 client builds a native Hedera `TransferTransaction`, your connected **HashPack** session **partially signs** it (authorizing the HBAR debit), the facilitator **co-signs as fee payer**, submits the transaction to Hedera, and the server responds with a presigned URL plus a `PAYMENT-RESPONSE` receipt.
-
-5. **Content integrity verification** — each file registers a SHA-256 `contentHash` commitment in `FileRegistry`, while the actual bytes remain in private MinIO/AIStor. The dedicated `GET /api/files/:id/verify` route reads the stored object, computes its SHA-256, and compares it to the on-chain commitment. A verified match shows the off-chain object still matches the content hash registered on Hedera; a mismatch indicates the object was altered or replaced without updating the registry entry.
-
-One **HashPack** WalletConnect session (via Reown AppKit, **`hedera` namespace only**) covers both registry writes and x402 payments — no second wallet connection and no separate EVM (`eip155`) signing path.
-
-## Verified Hedera Testnet Transaction
-
-This repository includes an existing successful Hedera testnet settlement for the paid MCP/x402 flow:
-
-- Transaction ID: `0.0.10780029@1790869050.695997997`
-- Mirror Node: https://testnet.mirrornode.hedera.com/api/v1/transactions/0.0.10780029-1790869050-695997997
-- HashScan: https://hashscan.io/testnet/transaction/0.0.10780029-1790869050-695997997
-
-This transaction demonstrates the successful HBAR settlement path used by the paid MCP demo and can be inspected independently on Hedera testnet. It is the existing verification record for the x402 payment workflow described in this template.
-
-## Paid MCP Demo
-
-The template includes a built-in paid MCP demonstration that exposes a single tool, `get_service_info`, over a stateless Streamable HTTP transport at `/api/mcp`. The browser demo page is `/mcp-test` and uses the same x402 Hedera payment flow as the file marketplace, but for an MCP tool call rather than a file download.
-
-The server-side implementation lives in `packages/nextjs/services/mcp/server.ts`, and the HTTP endpoint is in `packages/nextjs/app/api/mcp/route.ts`. The tool is a template-owned demo and is not an external production service. The request flow is:
-
-`MCP client → paid MCP tool → HTTP 402 → HashPack signs HBAR → self-hosted facilitator verifies/settles → tool executes → result returned`
-
-The demo is intentionally fixed-price at **0.01 HBAR** (**1,000,000 tinybars**) on **Hedera testnet** using native **HBAR**. It is implemented with `@x402/mcp` and the Hedera exact scheme, routed through the self-hosted facilitator. This is the MCP equivalent of the marketplace payment flow and is distinct from the private file-download path.
-
-### MCP-specific environment variables
-
-The demo requires matching values in `packages/nextjs/.env`:
-
-- `X402_MCP_PAY_TO` — server-side recipient account for the paid MCP demo.
-- `NEXT_PUBLIC_X402_MCP_PAY_TO` — browser-side allowed recipient value used by the demo UI.
-- `X402_NETWORK` — server-side x402 network identifier.
-- `NEXT_PUBLIC_X402_NETWORK` — browser-side x402 network identifier and must match `X402_NETWORK`.
-
-These values must correspond to the intended Hedera testnet recipient. The resource server validates `X402_MCP_PAY_TO` and requires it to be a valid account id before the tool can be served.
-
-### First-run MCP flow
-
-For a first run:
-
-1. Configure the required MCP x402 env vars in `packages/nextjs/.env`.
-2. Start the local infrastructure and facilitator (`yarn infra:up`).
-3. Start the Next.js app (`yarn next:dev`).
-4. Open `/mcp-test` in the browser.
-5. Connect HashPack.
-6. Approve the explicit **0.01 HBAR** testnet payment when prompted.
-7. Let the self-hosted facilitator verify and settle the transfer before the `get_service_info` tool executes.
-
-The response is the template’s built-in demonstration result, not an external paid service. It is meant to verify the MCP x402 payment flow in a controlled local/testnet template environment.
-
-## Why the facilitator needs a private key
-
-Hedera x402 payments are **native transfers**, not EVM contract calls. HashPack can sign the buyer’s side of that transfer, but it cannot pay Hedera network fees or broadcast the transaction on its own in this flow.
-
-The self-hosted facilitator holds an **ECDSA fee-payer account** (`FACILITATOR_ACCOUNT_ID` + `FACILITATOR_PRIVATE_KEY`) so it can:
-
-1. **Advertise** which account sponsors fees (`GET /supported` → `extra.feePayer`).
-2. **Verify** the buyer’s partially signed transfer matches the `402` challenge.
-3. **Settle** by adding the fee-payer signature, paying the network fee from its HBAR balance, and submitting the transaction to consensus.
-
-The buyer only authorizes moving their HBAR to the seller’s `payTo` account. The facilitator never custodies buyer funds — it can only co-sign a transfer the buyer already approved.
-
-The Next.js app does **not** need this private key. It only calls `FACILITATOR_URL`. Keep `FACILITATOR_PRIVATE_KEY` in server-side env (root `.env` for Docker, or `facilitator/.env` when running the service standalone), never in the browser.
-
-## Environment variables
-
-| Location | Key variables |
-| --- | --- |
-| Root `.env` | `MINIO_ROOT_*`, `S3_BUCKET`, `FACILITATOR_ACCOUNT_ID`, `FACILITATOR_PRIVATE_KEY` (fee payer — see above), `X402_NETWORK` |
-| `packages/nextjs/.env` | `FACILITATOR_URL`, `X402_NETWORK`, `NEXT_PUBLIC_X402_NETWORK`, `X402_MCP_PAY_TO`, `NEXT_PUBLIC_X402_MCP_PAY_TO`, `S3_*`, `HEDERA_RPC_URL`, optional `FILE_REGISTRY_ADDRESS`, optional `FILE_REGISTRY_HEDERA_CONTRACT_ID` / `NEXT_PUBLIC_FILE_REGISTRY_HEDERA_CONTRACT_ID` |
-| `facilitator/.env` | Same fee-payer credentials when running the facilitator outside Docker |
-
-Full tables: [`RUNBOOK.md` — Environment variables](RUNBOOK.md#environment-variables).
-
-## Deploy and verify `FileRegistry`
-
-Deployer and facilitator accounts must be **ECDSA** and funded with testnet HBAR.
+4. Deploy to Hedera testnet when needed:
 
 ```bash
 yarn hardhat:deploy --network hederaTestnet
 yarn hardhat:verify:testnet
 ```
 
-This regenerates `packages/nextjs/contracts/deployedContracts.ts` with:
+5. Start local services:
 
-- **`address`** — EVM address (`0x…`) used for JSON-RPC reads and HashScan links
-- **`hederaContractId`** — native Hedera contract id (`0.0.x`) resolved from the mirror node after deploy; required for HashPack native contract executes
+```bash
+yarn infra:up
+yarn next:dev
+```
 
-Verified contracts appear on [Hashscan (testnet)](https://hashscan.io/testnet).
+6. Open http://localhost:3000 and use the app.
 
-## Useful commands
+## Local infrastructure
 
-| Command | Purpose |
-| --- | --- |
-| `yarn infra:up` / `yarn infra:down` | Start or stop MinIO + facilitator |
-| `yarn infra:logs` | Follow Docker container logs |
-| `yarn hardhat:test` | Run `FileRegistry` contract tests |
-| `yarn x402:buy` | Node agent buyer script (see `RUNBOOK.md`) |
-| `yarn facilitator:check-types` | Type-check the facilitator service |
+The repo uses Docker Compose to run:
 
-## Security and local-development warnings
+- MinIO private storage on `:9000` and `:9001`
+- self-hosted x402 facilitator on `:4020`
 
-> Warning: the Hardhat config includes a local-development fallback private key in `hardhat.config.ts`. This is a generic local-dev key only and must never be funded or reused on Hedera public networks. It is not a production or testnet-funded account and should be treated as local-development-only.
+The stack is started with:
 
-## Caveats
+```bash
+yarn infra:up
+yarn infra:down
+yarn infra:logs
+```
 
-- **HashPack only** — the demo uses Reown AppKit with HashPack on the native **`hedera`** WalletConnect namespace. MetaMask and the dev burner wallet are not supported in this template.
-- **Native Hedera signing** — registry writes and x402 payments both go through HashPack’s native Hedera APIs (`hedera_signAndExecuteTransaction` / `hedera_signTransaction`), not wagmi `eth_sendTransaction`.
-- **ECDSA accounts** — buyers and the facilitator fee payer must use ECDSA keys (not ED25519).
-- **HBAR balance** — buyers need testnet HBAR for each private download; the facilitator account needs HBAR to sponsor network fees.
-- **Testnet settlement** — MinIO and the facilitator run locally, but payments settle on Hedera **testnet** (or mainnet if you change `X402_NETWORK`). The local Hedera fork is not used for x402.
-- **Hedera JSON-RPC log limits** — `eth_getLogs` is capped to a 7-day range on Hedera; the marketplace lists files via `getFiles` instead of event scanning.
-- **Node.js** — default **20 LTS** (≥ 20.18.3); optional **22** for Next.js only to avoid AWS SDK warnings — see [Node.js version](#nodejs-version).
-- **Docker** — required for `yarn infra:up`.
-- **No on-chain privacy** — payment amounts and accounts are visible on HashScan.
-- **Package churn** — pin `@x402/hedera` / `@x402/core` versions; APIs may change between releases.
-- **External facilitator** — optional: point `FACILITATOR_URL` at a hosted service instead of the local Docker facilitator.
+## Developer notes
 
-## Project layout
-
-- **`packages/hardhat`** — `FileRegistry` contract, deploy scripts, tests
-- **`packages/nextjs`** — Next.js resource server (`/api/files/*`), marketplace UI, x402 client (HashPack)
-- **`facilitator/`** — self-hosted x402 Hedera facilitator (verify / settle)
-- **`docker-compose.yml`** — MinIO + facilitator for local development
+- The x402 resource server does not hold the facilitator private key.
+- Payment amounts are tinybars and use native HBAR with asset id `0.0.0`.
+- The app uses the `hedera` namespace for HashPack and native signing flows.
+- The MCP demo is a local testnet reference flow, not a production external service.
 
 ## Links
 
 - [x402](https://x402.org/)
 - [Hedera Documentation](https://docs.hedera.com/)
-- [Hashscan](https://hashscan.io/) — block explorer
-- [Hedera Portal faucet](https://portal.hedera.com/faucet)
-- [create-scaffold-hbar](https://github.com/hedera-dev/create-scaffold-hbar) — CLI
+- [Hashscan](https://hashscan.io/)
+- [Hedera Portal Faucet](https://portal.hedera.com/faucet)
+- [Scaffold-HBAR](https://docs.hedera.com/solutions/tools/scaffold-hbar/index)
+- [RUNBOOK.md](RUNBOOK.md)

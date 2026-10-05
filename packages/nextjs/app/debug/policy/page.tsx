@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { hederaNamespace } from "@hashgraph/hedera-wallet-connect";
 import { useAppKit } from "@reown/appkit/react";
 import type { Abi, Address, Hex } from "viem";
@@ -15,6 +15,7 @@ const CHAIN_ID = 296;
 const POLICY_LABEL = "Policy402:v1";
 const FILE_ID = "0xcd8b3ab668dcdab153262110304afa7356bce4396f5f12c9bff82bdc32bf10be" as const;
 const RESOURCE_DESCRIPTOR = `api://files/${FILE_ID}`;
+const SERVICE_ID = keccak256(toBytes(RESOURCE_DESCRIPTOR)) as Hex;
 const PAY_TO = "0.0.10798563";
 const PAYMENT_ASSET = "0.0.0";
 const PRICE_TINYBAR = 180000000n;
@@ -38,17 +39,13 @@ function getPolicy402Metadata(): { address?: Address; hederaContractId?: string;
   };
 }
 
-function computeServiceId(descriptor: string): Hex {
-  return keccak256(toBytes(descriptor)) as Hex;
-}
-
-function computePolicyId(serviceId: Hex): Hex {
+function getPolicyId(serviceId: Hex): Hex {
   return keccak256(
     encodeAbiParameters([{ type: "bytes" }, { type: "bytes32" }], [toHex(toBytes(POLICY_LABEL)), serviceId]),
   ) as Hex;
 }
 
-export default function DebugPage() {
+export default function Policy402CreateDevPage() {
   const { open } = useAppKit();
   const { isConnected, hederaAccountId, provider } = useHederaWalletConnect();
   const { evmAddress, isLoading: isResolvingEvmAddress } = useHederaEvmAddress(hederaAccountId, CHAIN_ID);
@@ -90,22 +87,12 @@ export default function DebugPage() {
   const contract = getPolicy402Metadata();
   const validFrom = Math.floor(Date.now() / 1000);
   const validUntil = validFrom + 86400;
-  const serviceId = useMemo(() => computeServiceId(RESOURCE_DESCRIPTOR), []);
-  const nextPolicyId = useMemo(() => computePolicyId(serviceId), [serviceId]);
   const connectedEvmAddress = normalizeEvmAddress(evmAddress);
   const isFileOwner =
     isConnected &&
     fileOwnerCheck.status === "ready" &&
     connectedEvmAddress !== null &&
     connectedEvmAddress === fileOwnerCheck.owner;
-  const canCreatePolicy =
-    isFileOwner &&
-    !isResolvingEvmAddress &&
-    !!provider &&
-    !!hederaAccountId &&
-    !!contract.address &&
-    !!contract.hederaContractId &&
-    !!contract.abi;
 
   const handleCreate = async () => {
     if (!isConnected || !provider || !hederaAccountId) {
@@ -135,6 +122,16 @@ export default function DebugPage() {
     setStatus("Preparing Hedera transaction...");
 
     try {
+      const fnArgs = [
+        FILE_ID,
+        SERVICE_ID,
+        BigInt(validFrom),
+        BigInt(validUntil),
+        PAYMENT_ASSET,
+        PAY_TO,
+        PRICE_TINYBAR,
+      ] as const;
+
       const result = await writeContractViaNativeProvider({
         provider,
         hederaAccountId,
@@ -143,20 +140,13 @@ export default function DebugPage() {
         hederaContractId: contract.hederaContractId,
         abi: contract.abi,
         functionName: "createPolicy",
-        fnArgs: [
-          FILE_ID,
-          serviceId,
-          BigInt(validFrom),
-          BigInt(validUntil),
-          PAYMENT_ASSET,
-          PAY_TO,
-          PRICE_TINYBAR,
-        ] as const,
+        fnArgs,
       });
 
       setTransactionId(result.transactionId);
       setStatus("Waiting for Hedera confirmation...");
       await waitForHederaTransaction(result.transactionId, CHAIN_ID);
+      const nextPolicyId = getPolicyId(SERVICE_ID as Hex);
       setPolicyId(nextPolicyId);
       setStatus("Confirmed on Hedera Testnet");
       notification.success("Policy402 policy created");
@@ -201,7 +191,7 @@ export default function DebugPage() {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col gap-5 px-5 py-10">
       <div className="alert alert-info">
-        <span>DEV/DEBUG: temporary Policy402 creation flow for a private test resource.</span>
+        <span>DEV/DEBUG: temporary Policy402 creation flow for the private test file.</span>
       </div>
 
       <div className="rounded-2xl border border-base-300 bg-base-100 p-6">
@@ -249,7 +239,7 @@ export default function DebugPage() {
           </div>
           <div className="rounded-xl border border-base-300 bg-base-200 p-4">
             <div className="text-xs uppercase tracking-wide text-base-content/60">Service ID</div>
-            <div className="mt-2 break-all text-sm">{serviceId}</div>
+            <div className="mt-2 break-all text-sm">{SERVICE_ID}</div>
           </div>
         </div>
 
@@ -281,7 +271,15 @@ export default function DebugPage() {
           onClick={() => {
             void handleCreate();
           }}
-          disabled={busy || !canCreatePolicy}
+          disabled={
+            busy ||
+            !isFileOwner ||
+            isResolvingEvmAddress ||
+            fileOwnerCheck.status !== "ready" ||
+            !contract.address ||
+            !contract.hederaContractId ||
+            !contract.abi
+          }
         >
           {busy ? "Creating policy..." : "Create Policy"}
         </button>

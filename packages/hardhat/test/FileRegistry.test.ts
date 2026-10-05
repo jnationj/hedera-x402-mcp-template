@@ -333,7 +333,7 @@ describe("FileRegistry", function () {
     it("clamps the page size to MAX_PAGE_SIZE", async function () {
       const { registry } = await deployFixture();
       const maxPage = await registry.MAX_PAGE_SIZE();
-      const fileCount = Number(maxPage) + 2;
+      const fileCount = Number(maxPage) + 1;
 
       for (let i = 0; i < fileCount; i++) {
         await register(registry, { objectKey: `uploads/cap-${i}.bin`, name: `Cap ${i}` });

@@ -1,0 +1,4 @@
+npm warn config ignoring workspace config at c:\Users\user\OneDrive\Documents\hackathon\hedera\jakehall\x402-mcp\packages\hardhat/.npmrc
+[31m[1mError[22m[39m [31m[1mHH305:[22m[39m Unrecognized param --reporter
+
+For more info go to https://hardhat.org/HH305 or run Hardhat with --show-stack-traces

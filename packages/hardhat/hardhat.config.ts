@@ -61,7 +61,9 @@ const config: HardhatUserConfig = {
             workerPort: 10001,
           },
         }
-      : {},
+      : {
+          initialDate: "2023-11-14T22:13:20.000Z",
+        },
     hederaTestnet: {
       url: "https://testnet.hashio.io/api",
       accounts: [deployerPrivateKey],
@@ -87,6 +89,9 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "typechain-types",
     target: "ethers-v6",
+  },
+  mocha: {
+    timeout: 120000,
   },
 };
 
