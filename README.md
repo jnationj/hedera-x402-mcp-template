@@ -4,6 +4,16 @@ This template combines Scaffold-HBAR, Solidity smart contracts, a private MinIO 
 
 The project is designed for Hedera testnet use and is intended for local experimentation and developer validation. It is not an audited production deployment.
 
+## Scaffold this template
+
+Create a new Scaffold-HBAR project from this repository:
+
+```bash
+npm create scaffold-hbar@latest -- --template jnationj/hedera-x402-mcp-template
+```
+
+This template provides a Hedera x402 + MCP application built with Next.js and Hardhat, including on-chain FileRegistry and Policy402 contracts, HBAR payments, private file storage, and off-chain file integrity verification. Local development requires Docker, MinIO, a local x402 facilitator, and a funded Hedera testnet account.
+
 ## What this template provides
 
 - Hedera Scaffold-HBAR app shell
@@ -97,6 +107,18 @@ The current deployment metadata in `packages/nextjs/contracts/deployedContracts.
   - Hedera: `0.0.10862565`
 
 These are the current public deployment values this repo expects for the live testnet flow.
+
+### Hedera testnet deployment transaction evidence
+
+These deployment transaction hashes are recorded in the project's Hedera testnet deployment artifacts:
+
+- FileRegistry deployment transaction: `0x8b041c25d68702f7d67e25c9948e6bf1d74e296603e29b9f03f95cb275928325`
+- Policy402 deployment transaction: `0xc6ffbb1f71c402301941804d9704f8aa21c8d5ba02696349b2186920e7c1dcf1`
+
+Associated contracts:
+
+- FileRegistry: `0xEbdCf8DaE6E7962c38EBfE3c75BC75aA7F562357` / Hedera `0.0.10858803`
+- Policy402: `0xF28dD385aB3288f6c11423994968317dA4Be09B8` / Hedera `0.0.10862565`
 
 ## Policy workflow
 
